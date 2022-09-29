@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="800px" height="800px">您的瀏覽器版本過低,請升級瀏覽器或者使用chrome打開</canvas>
+</body>
+<script>
+    var canvas = document.querySelector('#canvas')
+    var context = canvas.getContext('2d');
+    //畫布寬高
+    var w = 800, h = 800;
+    /**
+     * 面對對象
+     * **/
+    function r(num) {
+        return Math.random() * num;
+    }
+    function Ball() {
+        this.x = r(500);
+        this.y = r(500);
+        this.r = r(50) + 10;
+        this.color = '#' + parseInt(Math.random() * 0xffffff).toString(16)
+        this.xSpeed = r(3) + 2;
+        this.ySpeed = r(3) + 1
+    }
+    /*
+    畫小球
+    */
+    Ball.prototype.show = function () {
+        context.beginPath();
+        context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        context.fillStyle = this.color;
+        context.fill()
+    };
+
+    /**
+     * 定義小球動的方法
+    */
+    Ball.prototype.run = function () {
+        /**
+         * 小球碰到邊緣后，速度曲相反值
+         * **/
+        if (this.x - this.r <= 0 || this.x + this.r > w) {
+            this.xSpeed = -this.xSpeed;
+        }
+        if (this.y - this.r <= 0 || this.y + this.r > w) {
+            this.ySpeed = -this.ySpeed;
+        }
+        this.x = this.x + this.xSpeed;
+        this.y = this.y + this.ySpeed;
+    }
+    //創建一個小球的數組
+    var ballArr = [];
+
+    /**
+     * 創造小球
+    */
+    for (i = 0; i < 100; i++) {
+        var ball = new Ball();
+        ballArr.push(ball);
+        ball.show();
+    }
+    /**
+     * 
+     * 小球運動
+    */
+    setInterval(() => {
+        //慶祝畫布
+        context.clearRect(0, 0, w, h);
+
+        for (i = 0; i < ballArr.length; i++) {
+            var ball = ballArr[i];
+            //更新坐標
+            ball.run();
+            ball.show();
+        }
+    }, 10);
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #cbdfa7;
+    }
+
+    canvas {
+        margin: 0 auto;
+        margin-top: 50px;
+        display: block;
+        border: 2px solid #aaa;
+    }
+</style>
+
+</html>
